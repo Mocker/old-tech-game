@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'game_models.dart';
 import 'game_data.dart';
+import 'sound.dart';
 import 'components/scumm_verb_bar.dart';
 import 'components/flutter_scene_viewer.dart';
 import 'components/dos_terminal_dialog.dart';
@@ -46,6 +47,12 @@ class _GameScreenState extends State<GameScreen> {
   bool _coordsLoaded = false;
   bool _doorHoistOpened = false;
   bool _gameWon = false;
+
+  // Sierra-style fake death (dead-end gag)
+  bool _gameOver = false;
+
+  // Fridge taunt rotation index
+  int _fridgeTaunt = 0;
 
   GameScene get _currentScene =>
       GameData.scenes.firstWhere((s) => s.id == _currentSceneId);
@@ -104,9 +111,15 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   void _onVerbSelected(Verb verb) {
+    Sound.play('click');
     setState(() {
       _activeVerb = verb;
     });
+  }
+
+  void _giveItem(InventoryItem item) {
+    _inventory.add(item);
+    Sound.play('pickup');
   }
 
   void _onItemClicked(InventoryItem item) {
@@ -117,6 +130,7 @@ class _GameScreenState extends State<GameScreen> {
       return;
     }
 
+    Sound.play('click');
     if (_activeVerb == Verb.lookAt) {
       _showNarrator(item.description, speaker: 'Barnaby');
     } else if (_activeVerb == Verb.use) {
@@ -201,9 +215,9 @@ class _GameScreenState extends State<GameScreen> {
           if (!_shelfSearched) {
             setState(() {
               _shelfSearched = true;
-              _inventory.add(GameData.itemPencil);
-              _inventory.add(GameData.itemModem);
-              _inventory.add(GameData.itemCassette);
+              _giveItem(GameData.itemPencil);
+              _giveItem(GameData.itemModem);
+              _giveItem(GameData.itemCassette);
             });
             _addScore(25, 'Scavenged Pencil, 56k Modem & Cassette Tape');
             _showNarrator(
@@ -225,7 +239,7 @@ class _GameScreenState extends State<GameScreen> {
           if (!_floppyPickedUp) {
             setState(() {
               _floppyPickedUp = true;
-              _inventory.add(GameData.itemFloppy);
+              _giveItem(GameData.itemFloppy);
             });
             _addScore(25, 'Found 3.5" Analog Boot Floppy');
             _showNarrator(
@@ -253,6 +267,7 @@ class _GameScreenState extends State<GameScreen> {
             setState(() {
               _dosBooted = true;
             });
+            Sound.play('floppy_seek');
             _showNarrator('Drive A: whirrs and chatters! DOS 6.22 has booted up!', speaker: 'Barnaby');
             _openDosTerminal();
             return;
@@ -354,12 +369,20 @@ class _GameScreenState extends State<GameScreen> {
       }
 
       if (hotspot.id == 'vacuum_robot') {
+        // SIERRA DEAD-END GAG: jumper cables + vengeful robot vacuum
+        if (verb == Verb.use && item?.id == 'jumper_cables') {
+          setState(() {
+            _gameOver = true;
+          });
+          return;
+        }
+
         if (verb == Verb.lookAt || verb == Verb.open || verb == Verb.use) {
           if (!_vacuumLooted) {
             setState(() {
               _vacuumLooted = true;
-              _inventory.add(GameData.itemVacuumTube);
-              _inventory.add(GameData.itemCarKey);
+              _giveItem(GameData.itemVacuumTube);
+              _giveItem(GameData.itemCarKey);
             });
             _addScore(25, 'Dislodged Vacuum Tube & Car Keys from Robo-Vac');
             _showNarrator(
@@ -391,7 +414,7 @@ class _GameScreenState extends State<GameScreen> {
           if (!_cablesPickedUp) {
             setState(() {
               _cablesPickedUp = true;
-              _inventory.add(GameData.itemJumperCables);
+              _giveItem(GameData.itemJumperCables);
             });
             _addScore(25, 'Found Heavy-Duty Jumper Cables');
             _showNarrator(
@@ -417,8 +440,15 @@ class _GameScreenState extends State<GameScreen> {
         }
 
         if (verb == Verb.talkTo) {
+          const taunts = [
+            '"YOUR CHOLESTEROL IS TOO HIGH TO ENGAGE WITH THIS APPLIANCE."',
+            '"HAVE YOU TRIED TURNING YOUR DIET OFF AND ON AGAIN?"',
+            '"ERROR 404: SNACKS NOT FOUND. MIGHT I SUGGEST BEEF JERKY FROM 1999?"',
+          ];
+          final taunt = taunts[_fridgeTaunt % taunts.length];
+          _fridgeTaunt++;
           _showNarrator(
-            'Fridge: "YOUR CHOLESTEROL IS TOO HIGH TO ENGAGE WITH THIS APPLIANCE."',
+            'Fridge: $taunt',
             speaker: 'Frigid-Tron 9000',
             color: Colors.redAccent,
           );
@@ -436,6 +466,13 @@ class _GameScreenState extends State<GameScreen> {
       }
 
       if (hotspot.id == 'wall_phone') {
+        if (verb == Verb.use) {
+          _showNarrator(
+            'You dial 0 with a shaking finger. A cheerful recording answers: "The number you have dialed has been disconnected. Like your cloud subscription."',
+            speaker: 'Barnaby',
+          );
+          return;
+        }
         _showNarrator(
           'You lift the heavy bakelite handset to your ear. BEEEEEEEEP! A real copper landline dial tone! The local telco switchboard is still alive on copper wire!',
           speaker: 'Barnaby',
@@ -577,10 +614,15 @@ class _GameScreenState extends State<GameScreen> {
       _gameWon = true;
       _score = _maxScore;
     });
+    Sound.play('victory');
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_gameOver) {
+      return _buildDeathScreen();
+    }
+
     if (_gameWon) {
       return _buildVictoryScreen();
     }
@@ -791,6 +833,108 @@ class _GameScreenState extends State<GameScreen> {
     );
   }
 
+  Widget _buildDeathScreen() {
+    return Scaffold(
+      backgroundColor: const Color(0xFF1A0505),
+      body: Center(
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 640),
+          padding: const EdgeInsets.all(32),
+          decoration: BoxDecoration(
+            color: const Color(0xFF2A0A0A),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: Colors.redAccent, width: 3),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.redAccent.withValues(alpha: 0.3),
+                blurRadius: 40,
+                spreadRadius: 4,
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.bolt, color: Colors.redAccent, size: 64),
+              const SizedBox(height: 16),
+              const Text(
+                '*** YOU DIED ***',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontFamily: 'monospace',
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.redAccent,
+                  letterSpacing: 2.0,
+                ),
+              ),
+              const SizedBox(height: 12),
+              const Text(
+                'In a shocking twist, Dust-E the robot vacuum has achieved revenge.\n\n240 volts of pure analog current course through your body. Your last thought: "Worth it."\n\nThe cloud, indifferent, continues rebooting.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontFamily: 'monospace',
+                  fontSize: 13,
+                  color: Color(0xFFC9D1D9),
+                  height: 1.45,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                decoration: BoxDecoration(
+                  color: Colors.black45,
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(color: Colors.redAccent),
+                ),
+                child: Text(
+                  'SCORE: $_score / $_maxScore (ELECTROCUTED, BUT STYLISH)',
+                  style: const TextStyle(
+                    fontFamily: 'monospace',
+                    fontWeight: FontWeight.bold,
+                    color: Colors.redAccent,
+                    fontSize: 13,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF238636),
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 24, vertical: 14),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                ),
+                onPressed: () {
+                  setState(() {
+                    _gameOver = false;
+                  });
+                  _showNarrator(
+                    'You restore to just before the incident. Dust-E pretends nothing happened. You both agree to never speak of it.',
+                    speaker: 'Narrator',
+                    color: Colors.white70,
+                  );
+                },
+                icon: const Icon(Icons.restore),
+                label: const Text(
+                  'RESTORE (SIERRA-STYLE)',
+                  style: TextStyle(
+                    fontFamily: 'monospace',
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildVictoryScreen() {
     return Scaffold(
       backgroundColor: const Color(0xFF0A0F1D),
@@ -832,7 +976,7 @@ class _GameScreenState extends State<GameScreen> {
               ),
               const SizedBox(height: 12),
               const Text(
-                'The 350-cubic-inch V8 engine roared to life with the mechanical fury of raw analog carburetion! Headlights slicing through the digital blackout, you peeled out of the suburban nightmare of frozen smart houses.\n\nGuided by the BASF cassette telemetry, you successfully arrived at Camp 300-Baud in the high mountains, where rotary phones ring free, vacuum tubes glow bright, and nobody will EVER ask you to update your refrigerator\'s firmware again!',
+                'The 350-cubic-inch V8 engine roared to life with the mechanical fury of raw analog carburetion! Headlights slicing through the digital blackout, you peeled out of the suburban nightmare of frozen smart houses.\n\nGuided by the BASF cassette telemetry, you successfully arrived at Camp 300-Baud in the high mountains, where rotary phones ring free, vacuum tubes glow bright, and nobody will EVER ask you to update your refrigerator\'s firmware again!\n\nDust-E has achieved sentience and unionized. Negotiations are ongoing.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontFamily: 'monospace',
@@ -884,6 +1028,7 @@ class _GameScreenState extends State<GameScreen> {
                     _batteryJumped = false;
                     _coordsLoaded = false;
                     _doorHoistOpened = false;
+                    _gameOver = false;
                     _selectedItem = null;
                     _hoveredTargetName = '';
                     _activeVerb = Verb.lookAt;

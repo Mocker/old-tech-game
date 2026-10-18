@@ -8,6 +8,23 @@ unchecked items are open. Blender-dependent work is documented here, not done.
 - [x] Victory "Play Again" reset now clears the selected inventory item, hover
       highlight, active dialog/timer, and resets the verb to Look at.
       (Before: a stale item selection could linger into the replay.)
+- [x] Audio wiring: added `audioplayers` (^6.8.1) + `lib/game/sound.dart`
+      helper. Click on verb/item taps, pickup chime on item acquisition,
+      floppy-seek on DOS boot, real `dialup.wav` during the BBS handshake,
+      victory fanfare on escape. (The 5 WAVs in `assets/audio/` finally play.)
+- [x] Sierra dead-end gag: USE jumper cables ON the Dust-E robot vacuum →
+      fake "YOU DIED" screen with score display and Sierra-style RESTORE
+      (keeps inventory/score, narrator pretends it never happened).
+- [x] DOS terminal joke commands: `FORMAT C:` → "Nice try.",
+      `WIN` → "Insufficient memory. And dignity.",
+      `HELP HELP` → "Help is currently helping itself. Please hold."
+- [x] Kitchen wall phone: USE now dials 0 →
+      "The number you have dialed has been disconnected. Like your cloud
+      subscription."
+- [x] Fridge `talk to` now rotates through 3 taunts (cholesterol / turn your
+      diet off and on again / ERROR 404: SNACKS NOT FOUND).
+- [x] Victory screen stinger: "Dust-E has achieved sentience and unionized.
+      Negotiations are ongoing."
 
 ## Needs Blender — done 2026-10-18
 

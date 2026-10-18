@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import '../sound.dart';
 
 class DosTerminalDialog extends StatefulWidget {
   final VoidCallback onBbsConnected;
@@ -118,6 +119,27 @@ class _DosTerminalDialogState extends State<DosTerminalDialog> {
       return;
     }
 
+    if (cmd == 'FORMAT C:') {
+      _addLines([
+        'Nice try.',
+      ]);
+      return;
+    }
+
+    if (cmd == 'WIN') {
+      _addLines([
+        'Insufficient memory. And dignity.',
+      ]);
+      return;
+    }
+
+    if (cmd == 'HELP HELP') {
+      _addLines([
+        'Help is currently helping itself. Please hold.',
+      ]);
+      return;
+    }
+
     if (cmd.startsWith('DIAL') || cmd == 'MODEM.COM' || cmd == 'MODEM') {
       _startDialupSequence();
       return;
@@ -141,6 +163,7 @@ class _DosTerminalDialogState extends State<DosTerminalDialog> {
     setState(() {
       _isConnecting = true;
     });
+    Sound.startDialup();
 
     final steps = [
       'Initializing US Robotics 56k Sportster...',
@@ -183,6 +206,7 @@ class _DosTerminalDialogState extends State<DosTerminalDialog> {
         _bbsConnected = true;
         _isConnecting = false;
       });
+      Sound.stopDialup();
       widget.onBbsConnected();
       _scrollToBottom();
     } else {
@@ -196,6 +220,7 @@ class _DosTerminalDialogState extends State<DosTerminalDialog> {
         ]);
         _isConnecting = false;
       });
+      Sound.stopDialup();
       _scrollToBottom();
     }
   }
