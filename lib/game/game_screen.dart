@@ -884,6 +884,11 @@ class _GameScreenState extends State<GameScreen> {
                     _batteryJumped = false;
                     _coordsLoaded = false;
                     _doorHoistOpened = false;
+                    _selectedItem = null;
+                    _hoveredTargetName = '';
+                    _activeVerb = Verb.lookAt;
+                    _dialogTimer?.cancel();
+                    _currentDialog = null;
                   });
                 },
                 icon: const Icon(Icons.replay),
