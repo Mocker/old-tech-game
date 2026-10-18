@@ -64,6 +64,15 @@ class _FlutterSceneViewerDialogState extends State<FlutterSceneViewerDialog>
       } else if (_item.id == 'vacuum_tube') {
         _interactiveFeedback =
             'TINK! You tap the vacuum tube glass with your fingernail. The tungsten filament rings like a crystal bell. Indestructible!';
+      } else if (_item.id == 'pencil') {
+        _interactiveFeedback =
+            'You chew the eraser thoughtfully. +0 points awarded. The pencil remains, resolutely, a pencil.';
+      } else if (_item.id == 'jumper_cables') {
+        _interactiveFeedback =
+            'SNAP! You crack the alligator clips together. Blue sparks of pure analog current! Somewhere, a smart lock flinches.';
+      } else if (_item.id == 'car_key') {
+        _interactiveFeedback =
+            'You jingle the brass key menacingly at the nearest dead smart lock. It remains unimpressed. The key, however, feels powerful.';
       } else {
         _interactiveFeedback = 'You examine $actionName. Fully analog, zero cloud tracking.';
       }
@@ -379,6 +388,24 @@ class _FlutterSceneViewerDialogState extends State<FlutterSceneViewerDialog>
                               'Tap Glass (Check Filament)',
                               Icons.lightbulb_outline,
                               () => _triggerItemAction('Vacuum Tube'),
+                            ),
+                          if (_item.id == 'pencil')
+                            _buildActionButton(
+                              'Chew Eraser Thoughtfully',
+                              Icons.edit,
+                              () => _triggerItemAction('Pencil'),
+                            ),
+                          if (_item.id == 'jumper_cables')
+                            _buildActionButton(
+                              'Snap Clips Together',
+                              Icons.bolt,
+                              () => _triggerItemAction('Jumper Cables'),
+                            ),
+                          if (_item.id == 'car_key')
+                            _buildActionButton(
+                              'Jingle Menacingly',
+                              Icons.vpn_key,
+                              () => _triggerItemAction('Car Key'),
                             ),
                         ],
                       ),

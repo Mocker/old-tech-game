@@ -7,7 +7,8 @@ class GameData {
     id: 'pencil',
     name: '#2 Leaded Pencil',
     description: 'An ancient analog writing implement, complete with chewed pink eraser. Essential for manual cassette tape rewinding!',
-    iconPath: 'assets/images/item_cassette_tape.png',
+    iconPath: 'assets/images/item_pencil.png',
+    modelPath: 'assets/models/pencil.glb',
   );
 
   static const itemFloppy = InventoryItem(
@@ -49,14 +50,16 @@ class GameData {
     id: 'jumper_cables',
     name: 'Jumper Cables',
     description: 'Heavy gauge copper cables with menacing alligator teeth. 100% analog electricity transfer device.',
-    iconPath: 'assets/images/item_crt_monitor.png',
+    iconPath: 'assets/images/item_jumper_cables.png',
+    modelPath: 'assets/models/jumper_cables.glb',
   );
 
   static const itemCarKey = InventoryItem(
     id: 'car_key',
     name: 'Station Wagon Key',
     description: 'A jagged piece of brass stamped "GM". No RFID chip, no remote start, no subscription required to unlock horsepower.',
-    iconPath: 'assets/images/item_floppy_disk.png',
+    iconPath: 'assets/images/item_car_key.png',
+    modelPath: 'assets/models/car_key.glb',
   );
 
   // Scenes

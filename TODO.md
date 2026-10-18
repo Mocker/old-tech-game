@@ -9,29 +9,24 @@ unchecked items are open. Blender-dependent work is documented here, not done.
       highlight, active dialog/timer, and resets the verb to Look at.
       (Before: a stale item selection could linger into the replay.)
 
-## Needs Blender (documented, not done)
+## Needs Blender — done 2026-10-18
 
-Asset pipeline: Blender 4.5.3 LTS driven headless. The MCP server
-(`blender-headless-mcp`, tools: `execute_bpy`, `render_image`,
-`submit_animation`/`animation_status`) runs on the Legion desktop at
-`H:\Apps\BlenderMCP\server.py`, reachable from the dev VM over Tailscale
-(`laptop-j031mhvb:8931`, bearer-token auth). Local modeling scripts live in
-`~/workspace/ludum-dare-60/props/` (outside this repo).
-Item icons are 512x512 transparent PNGs; 3D models are `.glb` in
-`assets/models/`.
+Asset pipeline: Blender 4.5.3 LTS driven headless (scripts in
+`~/workspace/ludum-dare-60/props/`). All rendered/modeled 2026-10-18.
 
-- [ ] Dedicated inventory icons — three items currently borrow other items'
-      icons (visible in the inventory tray), see `lib/game/game_data.dart`:
-  - `#2 pencil` → currently shows `item_cassette_tape.png`
-  - `jumper_cables` → currently shows `item_crt_monitor.png`
-  - `car_key` → currently shows `item_floppy_disk.png`
-- [ ] Rotary wall-phone prop: model + export `.glb` (+ icon) for the kitchen
-      `wall_phone` hotspot. A PNG-rendered reference model already exists as
-      `~/workspace/ludum-dare-60/props/rotary_phone.py` — it needs a GLB
-      export pass, not just a still render.
-- [ ] Optional: `.glb` models for pencil / jumper cables / car key so every
-      inventory item gets the 3D VIEW inspector (currently only
-      floppy/modem/vacuum tube/cassette have models).
+- [x] Dedicated inventory icons + 3D models, wired into `game_data.dart`:
+  - `#2 pencil` → `assets/images/item_pencil.png` + `assets/models/pencil.glb`
+  - `jumper_cables` → `assets/images/item_jumper_cables.png` +
+    `assets/models/jumper_cables.glb`
+  - `car_key` → `assets/images/item_car_key.png` +
+    `assets/models/car_key.glb`
+  - Each also got a humorous 3D-inspector action in
+    `flutter_scene_viewer.dart`.
+- [x] Rotary phone: `assets/models/rotary_phone.glb` +
+      `assets/images/item_rotary_phone.png` (adapted from
+      `~/workspace/ludum-dare-60/props/rotary_phone.py`). Not wired to an
+      inventory item — candidate for the kitchen `wall_phone` hotspot's
+      3D view if that ever gets one.
 
 ## Backlog (code, no Blender needed)
 
