@@ -474,6 +474,13 @@ class _GameScreenState extends State<GameScreen> {
           );
           return;
         }
+        if (verb == Verb.open) {
+          _showNarrator(
+            'You pop open the wall phone\'s casing. Inside: copper, dust, and the faint smell of 1974.',
+            speaker: 'Barnaby',
+          );
+          return;
+        }
         _showNarrator(
           'You lift the heavy bakelite handset to your ear. BEEEEEEEEP! A real copper landline dial tone! The local telco switchboard is still alive on copper wire!',
           speaker: 'Barnaby',
@@ -586,12 +593,99 @@ class _GameScreenState extends State<GameScreen> {
       }
     }
 
-    // Default Fallback
+    // Mismatched interactions get bespoke flavor before the generic fallback.
+    final flavor = _invalidInteractionFlavor(verb, item, hotspot);
+    if (flavor != null) {
+      _showNarrator(flavor, speaker: 'Barnaby');
+      return;
+    }
+
+    // Default Fallback (rotating, so repeated failures stay funny)
+    final fallback = _fallbackLines[_fallbackIndex % _fallbackLines.length];
+    _fallbackIndex++;
     _showNarrator(
-      'That doesn\'t seem to work with ${hotspot.name}.',
+      fallback,
       speaker: 'Narrator',
       color: Colors.white70,
     );
+  }
+
+  int _fallbackIndex = 0;
+
+  static const _fallbackLines = [
+    'Nope. The universe remains unimpressed.',
+    'Nothing happens. Somewhere, a smart fridge judges you.',
+    'You try it. Physics declines to participate.',
+    'Invalid combination. The Sierra gods shake their heads slowly.',
+    'That doesn\'t work. The 1980s called — they want their logic back.',
+    'Nope. Even the vacuum tube is embarrassed for you.',
+    'Nothing. The analog gods demand a more analog solution.',
+    'That doesn\'t seem to work. Have you tried turning it off and on again? (You can\'t. Nothing has power.)',
+  ];
+
+  /// Bespoke flavor for invalid interactions. Returns null when nothing
+  /// specific applies, letting the caller fall through to the generic
+  /// rotating fallback.
+  String? _invalidInteractionFlavor(
+      Verb verb, InventoryItem? item, Hotspot hotspot) {
+    // --- Specific item x hotspot combos ---
+    if (verb == Verb.use && item != null) {
+      switch ('${item.id}:${hotspot.id}') {
+        case 'jumper_cables:fridge':
+          return 'You clamp the cables onto the fridge handles. The fridge hums ominously. You decide this is how supervillains are born, and unclamp them.';
+        case 'pencil:pc':
+          return 'You try to write code directly on the monitor with the pencil. The monitor declines to compile.';
+        case 'modem:wall_phone':
+          return 'You try to plug the 56k modem into the wall phone. The connectors eye each other warily. It almost fits. It doesn\'t.';
+        case 'cassette:toaster':
+          return 'You try to insert the cassette into the toaster. The display reads: "WRONG SLOT, BUDDY."';
+        case 'floppy:fridge':
+          return 'You try to feed the floppy disk to the fridge\'s ice dispenser. The fridge dispenses only judgment.';
+        case 'vacuum_tube:toaster':
+          return 'You consider replacing the toaster\'s heating element with the vacuum tube. The toaster files this under "threats".';
+        case 'garage_key:station_wagon':
+          return 'You try the house key in the wagon\'s ignition. It doesn\'t turn. The wagon respects boundaries.';
+        case 'pencil:wall_phone':
+          return 'You write "CALL MOM" on your hand with the pencil. The 1980s way. The phone is unimpressed.';
+        case 'jumper_cables:toaster':
+          return 'You raise the jumper cables toward the toaster. The display flickers: "DON\'T." You lower the cables.';
+      }
+      // --- Item-generic USE lines ---
+      switch (item.id) {
+        case 'pencil':
+          return 'You tap it thoughtfully with the pencil. It remains un-tapped in any meaningful sense.';
+        case 'modem':
+          return 'You hold the 56k modem up to it and wait for a handshake. The only handshake is your own disappointment.';
+        case 'cassette':
+          return 'You try to insert the cassette. It doesn\'t fit. Nothing fits anymore. That\'s the theme of the evening.';
+        case 'floppy':
+          return 'You wave the 3.5" floppy at it. It holds 1.44MB of pure judgment.';
+        case 'vacuum_tube':
+          return 'You brandish the vacuum tube like a tiny glass sword. Your foe is unmoved. The tube glows with pride.';
+        case 'car_key':
+          return 'You try the wagon key. It doesn\'t turn. Somewhere, a locksmith nods knowingly.';
+        case 'garage_key':
+          return 'The house key doesn\'t fit. Keys are very particular about purpose. Unlike you, apparently.';
+        case 'jumper_cables':
+          return 'You consider jump-starting it. It considers a restraining order.';
+      }
+    }
+
+    // --- Verb-specific, no item needed ---
+    if (verb == Verb.talkTo && hotspot.id == 'station_wagon') {
+      return 'You say "good car" to the wagon. The wagon says nothing, because it is a car. A glorious, silent car.';
+    }
+    if (verb == Verb.push && hotspot.id == 'fridge') {
+      return 'You push the fridge. It weighs as much as your regrets. It doesn\'t budge.';
+    }
+    if (verb == Verb.pull && hotspot.id == 'fridge') {
+      return 'You pull the fridge. It stays put. Some things are immovable: this fridge, your cholesterol, the march of time.';
+    }
+    if ((verb == Verb.push || verb == Verb.pull) &&
+        hotspot.id == 'station_wagon') {
+      return 'You shove the 4,400-pound wagon with all your might. It moves approximately zero inches. Physics wins again.';
+    }
+    return null;
   }
 
   /// Narrator checklist of the remaining escape steps, shown after each
