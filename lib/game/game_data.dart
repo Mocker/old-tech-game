@@ -83,13 +83,13 @@ class GameData {
         Hotspot(
           id: 'pc',
           name: 'IBM 5150 PC & CRT',
-          normalizedRect: Rect.fromLTWH(0.08, 0.38, 0.28, 0.42),
+          normalizedRect: Rect.fromLTWH(0.42, 0.40, 0.22, 0.35),
           cursorLabel: 'Examine IBM PC',
         ),
         Hotspot(
           id: 'ham_radio',
           name: 'Vintage Ham Radio',
-          normalizedRect: Rect.fromLTWH(0.40, 0.42, 0.22, 0.35),
+          normalizedRect: Rect.fromLTWH(0.08, 0.38, 0.28, 0.42),
           cursorLabel: 'Inspect Ham Radio',
         ),
         Hotspot(
@@ -101,7 +101,7 @@ class GameData {
         Hotspot(
           id: 'stairs_up',
           name: 'Stairs to Kitchen',
-          normalizedRect: Rect.fromLTWH(0.78, 0.65, 0.20, 0.32),
+          normalizedRect: Rect.fromLTWH(0.80, 0.63, 0.20, 0.32),
           cursorLabel: 'Go up to Kitchen',
         ),
       ],
@@ -118,31 +118,25 @@ class GameData {
         Hotspot(
           id: 'fridge',
           name: 'Frigid-Tron 9000 Smart Fridge',
-          normalizedRect: Rect.fromLTWH(0.05, 0.22, 0.30, 0.65),
+          normalizedRect: Rect.fromLTWH(0.30, 0.22, 0.30, 0.65),
           cursorLabel: 'Examine Fridge',
         ),
         Hotspot(
           id: 'vacuum_robot',
           name: 'Dust-E Robot Vacuum',
-          normalizedRect: Rect.fromLTWH(0.38, 0.72, 0.24, 0.24),
+          normalizedRect: Rect.fromLTWH(0.48, 0.72, 0.24, 0.24),
           cursorLabel: 'Look at Vacuum',
         ),
         Hotspot(
           id: 'toaster',
           name: 'Subscription Smart Toaster',
-          normalizedRect: Rect.fromLTWH(0.42, 0.42, 0.18, 0.22),
+          normalizedRect: Rect.fromLTWH(0.70, 0.42, 0.18, 0.22),
           cursorLabel: 'Inspect Toaster',
-        ),
-        Hotspot(
-          id: 'wall_phone',
-          name: 'Rotary Landline Phone',
-          normalizedRect: Rect.fromLTWH(0.64, 0.25, 0.14, 0.28),
-          cursorLabel: 'Inspect Landline',
         ),
         Hotspot(
           id: 'door_garage',
           name: 'Door to Garage',
-          normalizedRect: Rect.fromLTWH(0.80, 0.28, 0.18, 0.65),
+          normalizedRect: Rect.fromLTWH(0.90, 0.28, 0.10, 0.65),
           cursorLabel: 'Open Garage Door',
         ),
         Hotspot(
@@ -167,6 +161,12 @@ class GameData {
           name: '1983 Wood-Paneled Wagon',
           normalizedRect: Rect.fromLTWH(0.12, 0.32, 0.62, 0.52),
           cursorLabel: 'Inspect Wagon',
+        ),
+        Hotspot(
+          id: 'wall_phone',
+          name: 'Rotary Landline Phone',
+          normalizedRect: Rect.fromLTWH(0.64, 0.25, 0.14, 0.28),
+          cursorLabel: 'Inspect Landline',
         ),
         Hotspot(
           id: 'car_battery',

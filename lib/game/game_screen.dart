@@ -466,27 +466,7 @@ class _GameScreenState extends State<GameScreen> {
         return;
       }
 
-      if (hotspot.id == 'wall_phone') {
-        if (verb == Verb.use) {
-          _showNarrator(
-            'You dial 0 with a shaking finger. A cheerful recording answers: "The number you have dialed has been disconnected. Like your cloud subscription."',
-            speaker: 'Barnaby',
-          );
-          return;
-        }
-        if (verb == Verb.open) {
-          _showNarrator(
-            'You pop open the wall phone\'s casing. Inside: copper, dust, and the faint smell of 1974.',
-            speaker: 'Barnaby',
-          );
-          return;
-        }
-        _showNarrator(
-          'You lift the heavy bakelite handset to your ear. BEEEEEEEEP! A real copper landline dial tone! The local telco switchboard is still alive on copper wire!',
-          speaker: 'Barnaby',
-        );
-        return;
-      }
+      
     }
 
     // ==========================================
@@ -513,6 +493,28 @@ class _GameScreenState extends State<GameScreen> {
           );
           return;
         }
+      }
+
+      if (hotspot.id == 'wall_phone') {
+        if (verb == Verb.use) {
+          _showNarrator(
+            'You dial 0 with a shaking finger. A cheerful recording answers: "The number you have dialed has been disconnected. Like your cloud subscription."',
+            speaker: 'Barnaby',
+          );
+          return;
+        }
+        if (verb == Verb.open) {
+          _showNarrator(
+            'You pop open the wall phone\'s casing. Inside: copper, dust, and the faint smell of 1974.',
+            speaker: 'Barnaby',
+          );
+          return;
+        }
+        _showNarrator(
+          'You lift the heavy bakelite handset to your ear. BEEEEEEEEP! A real copper landline dial tone! The local telco switchboard is still alive on copper wire!',
+          speaker: 'Barnaby',
+        );
+        return;
       }
 
       if (hotspot.id == 'car_battery') {
