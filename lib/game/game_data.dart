@@ -167,7 +167,7 @@ class GameData {
         Hotspot(
           id: 'tool_bench',
           name: 'Pegboard Workbench',
-          normalizedRect: Rect.fromLTWH(0.13, 0.24, 0.47, 0.51),
+          normalizedRect: Rect.fromLTWH(0.13, 0.24, 0.24, 0.51),
           cursorLabel: 'Search Workbench',
         ),
         Hotspot(
@@ -191,7 +191,7 @@ class GameData {
         Hotspot(
           id: 'car_battery',
           name: 'Car Battery & Hood',
-          normalizedRect: Rect.fromLTWH(0.40, 0.44, 0.14, 0.16),
+          normalizedRect: Rect.fromLTWH(0.30, 0.48, 0.14, 0.16),
           cursorLabel: 'Check Battery',
         ),
       ],
