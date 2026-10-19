@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'game_models.dart';
 import 'game_data.dart';
@@ -465,7 +466,12 @@ class _GameScreenState extends State<GameScreen> {
         );
         return;
       }
+    }
 
+    // ==========================================
+    // 3. GARAGE INTERACTIONS
+    // ==========================================
+    if (_currentSceneId == 'garage') {
       if (hotspot.id == 'wall_phone') {
         if (verb == Verb.use) {
           _showNarrator(
@@ -487,12 +493,7 @@ class _GameScreenState extends State<GameScreen> {
         );
         return;
       }
-    }
 
-    // ==========================================
-    // 3. GARAGE INTERACTIONS
-    // ==========================================
-    if (_currentSceneId == 'garage') {
       if (hotspot.id == 'door_kitchen') {
         setState(() {
           _currentSceneId = 'kitchen';
@@ -851,13 +852,26 @@ class _GameScreenState extends State<GameScreen> {
                       final w = constraints.maxWidth;
                       final h = constraints.maxHeight;
 
+                      // The background art uses BoxFit.cover, so replicate its
+                      // transform here: otherwise hotspot rects drift off their
+                      // visuals whenever the canvas aspect != the art aspect.
+                      // All three scene images are 1376x768; if art is swapped,
+                      // update these to the new intrinsic dimensions.
+                      const imgW = 1376.0;
+                      const imgH = 768.0;
+                      final coverScale = math.max(w / imgW, h / imgH);
+                      final dispW = imgW * coverScale;
+                      final dispH = imgH * coverScale;
+                      final offX = (w - dispW) / 2;
+                      final offY = (h - dispH) / 2;
+
                       return Stack(
                         children: _currentScene.hotspots.map((hspot) {
                           final rect = hspot.normalizedRect;
-                          final left = rect.left * w;
-                          final top = rect.top * h;
-                          final width = rect.width * w;
-                          final height = rect.height * h;
+                          final left = offX + rect.left * dispW;
+                          final top = offY + rect.top * dispH;
+                          final width = rect.width * dispW;
+                          final height = rect.height * dispH;
 
                           return Positioned(
                             left: left,
