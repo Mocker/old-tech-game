@@ -46,6 +46,7 @@ class _GameScreenState extends State<GameScreen> {
   bool _batteryJumped = false;
   bool _coordsLoaded = false;
   bool _doorHoistOpened = false;
+  bool _wagonKeyFound = false;
   bool _gameWon = false;
 
   // Sierra-style fake death (dead-end gag)
@@ -347,7 +348,7 @@ class _GameScreenState extends State<GameScreen> {
           return;
         }
 
-        if (verb == Verb.use && item?.id == 'car_key') {
+        if (verb == Verb.use && item?.id == 'garage_key') {
           setState(() {
             _garageUnlocked = true;
           });
@@ -382,11 +383,11 @@ class _GameScreenState extends State<GameScreen> {
             setState(() {
               _vacuumLooted = true;
               _giveItem(GameData.itemVacuumTube);
-              _giveItem(GameData.itemCarKey);
+              _giveItem(GameData.itemGarageKey);
             });
-            _addScore(25, 'Dislodged Vacuum Tube & Car Keys from Robo-Vac');
+            _addScore(25, 'Dislodged Vacuum Tube & Spare House Key from Robo-Vac');
             _showNarrator(
-              'You tilt the hysterical Dust-E robot on its back. Wedged tightly in its roller brushes are a pristine antique vacuum tube and a brass Station Wagon key!',
+              'You tilt the hysterical Dust-E robot on its back. Wedged tightly in its roller brushes are a pristine antique vacuum tube and Barnaby\'s spare brass house key — Dust-E has been hoarding it for months!',
               speaker: 'Barnaby',
             );
           } else {
@@ -565,6 +566,18 @@ class _GameScreenState extends State<GameScreen> {
       }
 
       if (hotspot.id == 'tool_bench') {
+        if ((verb == Verb.lookAt || verb == Verb.open) && !_wagonKeyFound) {
+          setState(() {
+            _wagonKeyFound = true;
+            _giveItem(GameData.itemCarKey);
+          });
+          _addScore(25, 'Found the Spare Wagon Ignition Key');
+          _showNarrator(
+            'Behind the cans of WD-40, hanging on a bent nail: a brass GM ignition key! Barnaby always kept a spare where the cloud couldn\'t find it.\n\n${_escapeRemaining()}',
+            speaker: 'Barnaby',
+          );
+          return;
+        }
         _showNarrator(
           'Dusty metric wrenches, cans of WD-40, and a framed photograph of Steve Wozniak smiling beside an Apple I.',
           speaker: 'Barnaby',
@@ -593,6 +606,9 @@ class _GameScreenState extends State<GameScreen> {
     }
     if (!_doorHoistOpened) {
       missing.add('open the garage door with the manual chain hoist');
+    }
+    if (!_wagonKeyFound) {
+      missing.add('find the wagon\'s ignition key');
     }
     if (missing.isEmpty) {
       return 'All systems go — use the ignition key on the wagon and DRIVE!';
@@ -1046,6 +1062,7 @@ class _GameScreenState extends State<GameScreen> {
                     _batteryJumped = false;
                     _coordsLoaded = false;
                     _doorHoistOpened = false;
+                    _wagonKeyFound = false;
                     _gameOver = false;
                     _selectedItem = null;
                     _hoveredTargetName = '';

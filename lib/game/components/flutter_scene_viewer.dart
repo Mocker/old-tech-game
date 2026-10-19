@@ -73,6 +73,9 @@ class _FlutterSceneViewerDialogState extends State<FlutterSceneViewerDialog>
       } else if (_item.id == 'car_key') {
         _interactiveFeedback =
             'You jingle the brass key menacingly at the nearest dead smart lock. It remains unimpressed. The key, however, feels powerful.';
+      } else if (_item.id == 'garage_key') {
+        _interactiveFeedback =
+            'You jingle the house key. Somewhere behind a dead touchpad, a smart lock weeps with envy.';
       } else {
         _interactiveFeedback = 'You examine $actionName. Fully analog, zero cloud tracking.';
       }
@@ -401,11 +404,11 @@ class _FlutterSceneViewerDialogState extends State<FlutterSceneViewerDialog>
                               Icons.bolt,
                               () => _triggerItemAction('Jumper Cables'),
                             ),
-                          if (_item.id == 'car_key')
+                          if (_item.id == 'car_key' || _item.id == 'garage_key')
                             _buildActionButton(
                               'Jingle Menacingly',
                               Icons.vpn_key,
-                              () => _triggerItemAction('Car Key'),
+                              () => _triggerItemAction('Key'),
                             ),
                         ],
                       ),

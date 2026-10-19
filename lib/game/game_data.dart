@@ -62,6 +62,14 @@ class GameData {
     modelPath: 'assets/models/car_key.glb',
   );
 
+  static const itemGarageKey = InventoryItem(
+    id: 'garage_key',
+    name: 'Brass House Key',
+    description: 'A heavy brass house key on a lucky rabbit\'s-foot keychain. It smells faintly of WD-40 and 1994.',
+    iconPath: 'assets/images/item_car_key.png',
+    modelPath: 'assets/models/car_key.glb',
+  );
+
   // Scenes
   static final List<GameScene> scenes = [
     // 1. BASEMENT
