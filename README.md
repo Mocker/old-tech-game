@@ -3,6 +3,8 @@
 
 A complete point-and-click retro adventure game demo built in **Flutter** with **Flutter Scene (Flutter GPU)**, inspired by LucasArts' *Day of the Tentacle* and Sierra's *Space Quest*.
 
+**Play now at https://irishwilly.itch.io/analog-quest-day-of-the-dial-up**
+
 ---
 
 ## 🕹️ Premise & Lore
