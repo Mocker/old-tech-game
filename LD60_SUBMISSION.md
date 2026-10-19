@@ -1,5 +1,9 @@
 # LD60 Submission Package — ANALOG QUEST: DAY OF THE DIAL-UP
 
+> **✅ SUBMITTED Mon Oct 19, ~1:30 PM PDT** — ahead of the 3:00 PM deadline.
+> itch.io build is the `analog-quest-web-build.zip` in this repo (base-href
+> fixed to `./` for itch.io iframe hosting; `index.html` at zip root).
+
 Submission kit for the Ludum Dare 60 Jam. Everything here is ready to use;
 the only steps that need a human are logins, uploads, and the final click.
 
@@ -107,12 +111,11 @@ All work done during the Jam; AI assistance used in the dev workflow.
 
 - [x] Fresh build + itch.io zip ready (done Sun evening — verified final, no
       rebuild needed unless new commits land)
-- [ ] Zip `build/web` — already done: upload `analog-quest-web-build.zip` to
-      itch.io, set page public
-- [ ] ldjam.com → create entry, **tier: Jam**, upload cover + screenshots,
-      paste the description above, link the itch.io page
-- [ ] Submit **by 2:00 PM PDT** Monday Oct 19 (deadline 3:00 PM + 1h
-      submission hour)
+- [x] Zip `build/web` — uploaded `analog-quest-web-build.zip` to
+      itch.io, page public (Mon Oct 19)
+- [x] ldjam.com → entry created, **tier: Jam**, cover + screenshots
+      uploaded, description pasted, itch.io page linked (Mon Oct 19)
+- [x] Submitted **by 2:00 PM PDT** Monday Oct 19 ✅
 
 Prepared Sun Oct 18 evening by Muse (research run) — the in-chat assistant
 promised this package; nothing here was promised in duplicate.
