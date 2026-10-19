@@ -500,7 +500,7 @@ class _GameScreenState extends State<GameScreen> {
           });
           _addScore(25, 'Manually Hoisted Garage Door');
           _showNarrator(
-            'RATTLE-CLANK! With sheer muscle and grease, you pull the manual chain hoist. The garage door rolls up to reveal the star-filled, unmonitored night sky!',
+            'RATTLE-CLANK! With sheer muscle and grease, you pull the manual chain hoist. The garage door rolls up to reveal the star-filled, unmonitored night sky!\n\n${_escapeRemaining()}',
             speaker: 'Barnaby',
           );
           return;
@@ -514,7 +514,7 @@ class _GameScreenState extends State<GameScreen> {
           });
           _addScore(25, 'Jump-Started 1983 Station Wagon 12V Battery');
           _showNarrator(
-            'SNAP! CRACKLE! SPARK! You clamp the heavy alligator teeth onto the lead battery posts. Analog 12-volt direct current flows! The dashboard dials twitch to life!',
+            'SNAP! CRACKLE! SPARK! You clamp the heavy alligator teeth onto the lead battery posts. Analog 12-volt direct current flows! The dashboard dials twitch to life!\n\n${_escapeRemaining()}',
             speaker: 'Barnaby',
           );
           return;
@@ -538,7 +538,7 @@ class _GameScreenState extends State<GameScreen> {
             });
             _addScore(25, 'Loaded BBS Safehouse Coordinates into Car Stereo');
             _showNarrator(
-              'CHUNK! You push the BASF cassette into the dashboard tape deck. The analog telemetry audio tones guide the electronic compass straight to Camp 300-Baud!',
+              'CHUNK! You push the BASF cassette into the dashboard tape deck. The analog telemetry audio tones guide the electronic compass straight to Camp 300-Baud!\n\n${_escapeRemaining()}',
               speaker: 'Barnaby',
             );
           } else {
@@ -581,8 +581,26 @@ class _GameScreenState extends State<GameScreen> {
     );
   }
 
-  void _attemptEscape() {
+  /// Narrator checklist of the remaining escape steps, shown after each
+  /// finale gate so the player always knows what's left to do.
+  String _escapeRemaining() {
+    final missing = <String>[];
     if (!_batteryJumped) {
+      missing.add('jump the 12V battery with the jumper cables');
+    }
+    if (!_coordsLoaded) {
+      missing.add('load the BBS coordinates into the tape deck');
+    }
+    if (!_doorHoistOpened) {
+      missing.add('open the garage door with the manual chain hoist');
+    }
+    if (missing.isEmpty) {
+      return 'All systems go — use the ignition key on the wagon and DRIVE!';
+    }
+    return 'ESCAPE CHECKLIST — still to do: ${missing.join(' • ')}.';
+  }
+
+  void _attemptEscape() {    if (!_batteryJumped) {
       _showNarrator(
         'You turn the ignition key: *click-click-click*. The 12V battery is dead! You need to jump-start it with the jumper cables.',
         speaker: 'Barnaby',
